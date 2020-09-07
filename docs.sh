@@ -1,5 +1,6 @@
 #!/bin/sh
 
+jpm build
 mdz
 mv site /tmp
 git checkout gh-pages
