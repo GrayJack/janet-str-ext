@@ -1,0 +1,19 @@
+{:title "str-ext"
+ :author "Eric Shimizu Karbstein"
+ :license "MIT"
+ :template "mdzdoc/main.html"
+ :order 0}
+---
+
+str-ext is a Janet module with functions to extend the available API for string and buffers
+in the langauge
+
+## Source code
+
+@p{@link[https://github.com/GrayJack/janet-str-ext]}
+
+## Install
+
+@codeblock```
+[sudo] jpm install https://github.com/GrayJack/janet-str-ext
+```

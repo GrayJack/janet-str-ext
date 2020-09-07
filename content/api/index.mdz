@@ -1,0 +1,15 @@
+
+{:title "API"
+ :author "Eric Shimizu Karbstein"
+ :license "MIT"
+ :template "mdzdoc/main.html"
+ :order 1}
+---
+
+## Index
+
+@api-index[build/str-ext]
+
+## Reference
+
+@api-docs[build/str-ext]
