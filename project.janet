@@ -1,9 +1,9 @@
 (declare-project
-  :name "template")
+  :name "str-ext")
 
 (post-deps
   (declare-native
-    :name "template"
+    :name "str-ext"
     :source [])
 
   (phony "build-rust-code" []
