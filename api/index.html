@@ -1,0 +1,69 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="../mdzdoc-css/main.css" type="text/css" charset="utf-8">
+    <title>API</title>
+    <meta name="description" content="">
+  </head>
+  <body>
+    <!-- Toggles Navigation -->
+    <div id="toc-toggle" class="">
+      <div class="bar topbar"></div>
+      <div class="bar"></div>
+      <div class="bar botbar"></div>
+    </div>
+    <div class="twocol">
+      <div class="toc toc-hidden">
+        <ul>
+          <li><span><a href="../index.html">str-ext</a></span></li><li class="caret"><span class="selected"><a href="index.html">API</a></span><ul></ul></li>
+        </ul>
+      </div>
+      <div class="content-wrapper">
+        <h1>API</h1>
+        <div class="prevnext-bar">
+          <span class="prev"><a href="../index.html"><span class="prevnext-text">str-ext</span></a></span>
+          <span class="next"><a href="../index.html"><span class="prevnext-text">str-ext</span></a></span>
+        </div>
+        
+
+<h2>Index
+</h2>
+<p><a href="#ascii?">ascii?</a><span class="divider"> </span><a href="#chars">chars</a><span class="divider"> </span><a href="#contains?">contains?</a><span class="divider"> </span><a href="#fields">fields</a><span class="divider"> </span><a href="#graphemes">graphemes</a><span class="divider"> </span><a href="#lines">lines</a><span class="divider"> </span><a href="#lines-with-terminator">lines-with-terminator</a><span class="divider"> </span><a href="#sentences">sentences</a><span class="divider"> </span><a href="#utf8-chunks">utf8-chunks</a><span class="divider"> </span><a href="#utf8?">utf8?</a><span class="divider"> </span><a href="#words">words</a><span class="divider"> </span><a href="#words-with-breaks">words-with-breaks</a></p><h2>Reference
+</h2>
+<div class="docstring"><div class="binding-wrap"><span class="binding"><a id="ascii?">ascii?</a></span><span class="binding-type">cfunction</span></div><pre class="mendoza-codeblock"><code data-language="janet">(<span class="mdzsyn-symbol">str-ext/ascii?</span> <span class="mdzsyn-symbol">str-or-buff</span>)</code></pre><p>Returns true if and only if every byte in this string|buffer is ASCII.</p></div><div class="docstring"><div class="binding-wrap"><span class="binding"><a id="chars">chars</a></span><span class="binding-type">cfunction</span></div><pre class="mendoza-codeblock"><code data-language="janet">(<span class="mdzsyn-symbol">str-ext/chars</span> <span class="mdzsyn-symbol">str-or-buff</span>)</code></pre><p>Returns a tuple with the chars of the string|buffer. If invalid UTF-8 is encountered, then the Unicode replacement codepoint is yielded instead.</p></div><div class="docstring"><div class="binding-wrap"><span class="binding"><a id="contains?">contains?</a></span><span class="binding-type">cfunction</span></div><pre class="mendoza-codeblock"><code data-language="janet">(<span class="mdzsyn-symbol">str-ext/contains?</span> <span class="mdzsyn-symbol">pattern</span> <span class="mdzsyn-symbol">str-or-buff</span>)</code></pre><p>Returns true if and only if this string|buffer contains the given pattern. A pattern must be string|buffer as well.</p></div><div class="docstring"><div class="binding-wrap"><span class="binding"><a id="fields">fields</a></span><span class="binding-type">cfunction</span></div><pre class="mendoza-codeblock"><code data-language="janet">(<span class="mdzsyn-symbol">str-ext/chars</span> <span class="mdzsyn-symbol">str-or-buff</span>)</code></pre><p>Returns a tuple with the fields of the string|buffer separated by contiguous whitespace.</p></div><div class="docstring"><div class="binding-wrap"><span class="binding"><a id="graphemes">graphemes</a></span><span class="binding-type">cfunction</span></div><pre class="mendoza-codeblock"><code data-language="janet">(<span class="mdzsyn-symbol">str-ext/graphemes</span> <span class="mdzsyn-symbol">str-or-buff</span>)</code></pre><p>Returns a tuple with the grapheme clusters of the string|buffer. If invalid UTF-8 is encountered, then the Unicode replacement codepoint is yielded instead.</p></div><div class="docstring"><div class="binding-wrap"><span class="binding"><a id="lines">lines</a></span><span class="binding-type">cfunction</span></div><pre class="mendoza-codeblock"><code data-language="janet">(<span class="mdzsyn-symbol">str-ext/lines</span> <span class="mdzsyn-symbol">str-or-buff</span>)</code></pre><p>Returns a tuple with the lines of the string|buffer without the terminator. This only recognizes `\n` and `\r\n` as line terminator.</p></div><div class="docstring"><div class="binding-wrap"><span class="binding"><a id="lines-with-terminator">lines-with-terminator</a></span><span class="binding-type">cfunction</span></div><pre class="mendoza-codeblock"><code data-language="janet">(<span class="mdzsyn-symbol">str-ext/lines-with-terminator</span> <span class="mdzsyn-symbol">str-or-buff</span>)</code></pre><p>Returns a tuple with the lines of the string|buffer with the terminators. This only recognizes `\n` and `\r\n` as line terminator.</p></div><div class="docstring"><div class="binding-wrap"><span class="binding"><a id="sentences">sentences</a></span><span class="binding-type">cfunction</span></div><pre class="mendoza-codeblock"><code data-language="janet">(<span class="mdzsyn-symbol">str-ext/sentences</span> <span class="mdzsyn-symbol">str-or-buff</span>)</code></pre><p>Returns a tuple with the sentences of the string|buffer. Typically, a sentence will include its trailing punctuation and whitespace.<br>When invalid UTF-8 is encountered, replacement codepoints are substituted.</p></div><div class="docstring"><div class="binding-wrap"><span class="binding"><a id="utf8-chunks">utf8-chunks</a></span><span class="binding-type">cfunction</span></div><pre class="mendoza-codeblock"><code data-language="janet">(<span class="mdzsyn-symbol">str-ext/utf8-chunks</span> <span class="mdzsyn-symbol">str-or-buff</span>)</code></pre><p>Returns a tuple with the first value being a tuple of valid UTF-8 chunks and the second value beinf a tuple of invalid UTF-8 chunks.<br>Invalid UTF-8 bytes are always 1-3 bytes, which are determined via the "substitution of maximal subparts"</p></div><div class="docstring"><div class="binding-wrap"><span class="binding"><a id="utf8?">utf8?</a></span><span class="binding-type">cfunction</span></div><pre class="mendoza-codeblock"><code data-language="janet">(<span class="mdzsyn-symbol">str-ext/utf8?</span> <span class="mdzsyn-symbol">str-or-buff</span>)</code></pre><p>Returns true if and only if the entire string|buffer is valid UTF-8.</p></div><div class="docstring"><div class="binding-wrap"><span class="binding"><a id="words">words</a></span><span class="binding-type">cfunction</span></div><pre class="mendoza-codeblock"><code data-language="janet">(<span class="mdzsyn-symbol">str-ext/words</span> <span class="mdzsyn-symbol">str-or-buff</span>)</code></pre><p>Returns a tuple with the words of the string|buffer. If invalid UTF-8 is encountered, then the Unicode replacement codepoint is yielded instead.</p></div><div class="docstring"><div class="binding-wrap"><span class="binding"><a id="words-with-breaks">words-with-breaks</a></span><span class="binding-type">cfunction</span></div><pre class="mendoza-codeblock"><code data-language="janet">(<span class="mdzsyn-symbol">str-ext/words-with-breaks</span> <span class="mdzsyn-symbol">str-or-buff</span>)</code></pre><p>Returns a tuple with the words and breaks of the string|buffer. If invalid UTF-8 is encountered, then the Unicode replacement codepoint is yielded instead.</p></div>
+        <div class="prevnext-bar">
+          <span class="prev"><a href="../index.html"><span class="prevnext-text">str-ext</span></a></span>
+          <span class="next"><a href="../index.html"><span class="prevnext-text">str-ext</span></a></span>
+        </div>
+      </div>
+    </div>
+    <script charset="utf-8">
+      function toggleToc() {
+        var toggler = document.getElementById('toc-toggle');
+        var wrapper = document.querySelector('.toc');
+        wrapper.classList.toggle('toc-hidden');
+        toggler.classList.toggle('open');
+        window.localStorage.setItem('show-toc', toggler.classList.contains('open'));
+      }
+      function addTocToggle() {
+        var el = document.getElementById('toc-toggle');
+        el.addEventListener('click', toggleToc);
+      }
+      window.addEventListener('DOMContentLoaded', addTocToggle);
+      if (window.localStorage.getItem('show-toc') === 'true') {
+        toggleToc()
+      }
+    </script>
+    <footer>
+      <div class="content-wrapper">
+        Copyright &copy; Eric Shimizu Karbstein 2020
+      </div>
+    </footer>
+  </body>
+</html>

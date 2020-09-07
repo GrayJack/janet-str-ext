@@ -1,0 +1,1 @@
+{"rustc":11789395909990628562,"features":"[]","target":16709847039341168585,"profile":790932235056820152,"path":10872709659218687626,"deps":[[215150160466021571,"janetrs",false,447681039007279442]],"local":[{"CheckDepInfo":{"dep_info":"release/.fingerprint/str-ext-c0ac2d24215ed1ef/dep-lib-str-ext"}}],"rustflags":["-Zmacro-backtrace"],"metadata":10600232227539448847,"config":0}
