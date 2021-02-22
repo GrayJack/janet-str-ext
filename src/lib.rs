@@ -1,6 +1,6 @@
 use janetrs::{
     janet_fn, janet_mod, jpanic, tuple,
-    types::{Janet, JanetBuffer, JanetString, JanetTuple, JanetType},
+    types::{Janet, JanetString, JanetTuple, TaggedJanet},
     util::check_fix_arity,
 };
 
@@ -8,42 +8,22 @@ use janetrs::{
 pub fn contains(args: &mut [Janet]) -> Janet {
     check_fix_arity(args, 2);
 
-    match args[1].kind() {
-        JanetType::Buffer => {
-            let buff = args[0].unwrap::<JanetBuffer>().unwrap();
-
-            match args[0].kind() {
-                JanetType::Buffer => {
-                    let pattern = args[0].unwrap::<JanetBuffer>().unwrap();
-                    buff.contains(pattern).into()
-                },
-                JanetType::String => {
-                    let pattern = args[0].unwrap::<JanetString>().unwrap();
-                    buff.contains(pattern).into()
-                },
-                _ => jpanic!(
-                    "bad slot #0, expected string|buffer, got {}",
-                    args[0].kind()
-                ),
-            }
+    match args[1].unwrap() {
+        TaggedJanet::Buffer(buf) => match args[0].unwrap() {
+            TaggedJanet::Buffer(pattern) => buf.contains(pattern).into(),
+            TaggedJanet::String(pattern) => buf.contains(pattern).into(),
+            _ => jpanic!(
+                "bad slot #0, expected string|buffer, got {}",
+                args[0].kind()
+            ),
         },
-        JanetType::String => {
-            let s = args[0].unwrap::<JanetString>().unwrap();
-
-            match args[0].kind() {
-                JanetType::Buffer => {
-                    let pattern = args[0].unwrap::<JanetBuffer>().unwrap();
-                    s.contains(pattern).into()
-                },
-                JanetType::String => {
-                    let pattern = args[0].unwrap::<JanetString>().unwrap();
-                    s.contains(pattern).into()
-                },
-                _ => jpanic!(
-                    "bad slot #0, expected string|buffer, got {}",
-                    args[0].kind()
-                ),
-            }
+        TaggedJanet::String(s) => match args[0].unwrap() {
+            TaggedJanet::Buffer(pattern) => s.contains(pattern).into(),
+            TaggedJanet::String(pattern) => s.contains(pattern).into(),
+            _ => jpanic!(
+                "bad slot #0, expected string|buffer, got {}",
+                args[0].kind()
+            ),
         },
         _ => jpanic!(
             "bad slot #1, expected string|buffer, got {}",
@@ -56,9 +36,9 @@ pub fn contains(args: &mut [Janet]) -> Janet {
 pub fn is_ascii(args: &mut [Janet]) -> Janet {
     check_fix_arity(args, 1);
 
-    match args[0].kind() {
-        JanetType::Buffer => args[0].unwrap::<JanetBuffer>().unwrap().is_ascii().into(),
-        JanetType::String => args[0].unwrap::<JanetString>().unwrap().is_ascii().into(),
+    match args[0].unwrap() {
+        TaggedJanet::Buffer(buf) => buf.is_ascii().into(),
+        TaggedJanet::String(s) => s.is_ascii().into(),
         _ => jpanic!(
             "bad slot #0, expected string|buffer, got {}",
             args[0].kind()
@@ -70,9 +50,9 @@ pub fn is_ascii(args: &mut [Janet]) -> Janet {
 pub fn is_utf8(args: &mut [Janet]) -> Janet {
     check_fix_arity(args, 1);
 
-    match args[0].kind() {
-        JanetType::Buffer => args[0].unwrap::<JanetBuffer>().unwrap().is_utf8().into(),
-        JanetType::String => args[0].unwrap::<JanetString>().unwrap().is_utf8().into(),
+    match args[0].unwrap() {
+        TaggedJanet::Buffer(buf) => buf.is_utf8().into(),
+        TaggedJanet::String(s) => s.is_utf8().into(),
         _ => jpanic!(
             "bad slot #0, expected string|buffer, got {}",
             args[0].kind()
@@ -84,19 +64,9 @@ pub fn is_utf8(args: &mut [Janet]) -> Janet {
 pub fn chars(args: &mut [Janet]) -> Janet {
     check_fix_arity(args, 1);
 
-    match args[0].kind() {
-        JanetType::Buffer => args[0]
-            .unwrap::<JanetBuffer>()
-            .unwrap()
-            .chars()
-            .collect::<JanetTuple>()
-            .into(),
-        JanetType::String => args[0]
-            .unwrap::<JanetString>()
-            .unwrap()
-            .chars()
-            .collect::<JanetTuple>()
-            .into(),
+    match args[0].unwrap() {
+        TaggedJanet::Buffer(buf) => buf.chars().collect::<JanetTuple>().into(),
+        TaggedJanet::String(s) => s.chars().collect::<JanetTuple>().into(),
         _ => jpanic!(
             "bad slot #0, expected string|buffer, got {}",
             args[0].kind()
@@ -108,17 +78,13 @@ pub fn chars(args: &mut [Janet]) -> Janet {
 pub fn fields(args: &mut [Janet]) -> Janet {
     check_fix_arity(args, 1);
 
-    match args[0].kind() {
-        JanetType::Buffer => args[0]
-            .unwrap::<JanetBuffer>()
-            .unwrap()
+    match args[0].unwrap() {
+        TaggedJanet::Buffer(buf) => buf
             .fields()
             .map(JanetString::from)
             .collect::<JanetTuple>()
             .into(),
-        JanetType::String => args[0]
-            .unwrap::<JanetString>()
-            .unwrap()
+        TaggedJanet::String(s) => s
             .fields()
             .map(JanetString::from)
             .collect::<JanetTuple>()
@@ -134,19 +100,9 @@ pub fn fields(args: &mut [Janet]) -> Janet {
 pub fn graphemes(args: &mut [Janet]) -> Janet {
     check_fix_arity(args, 1);
 
-    match args[0].kind() {
-        JanetType::Buffer => args[0]
-            .unwrap::<JanetBuffer>()
-            .unwrap()
-            .graphemes()
-            .collect::<JanetTuple>()
-            .into(),
-        JanetType::String => args[0]
-            .unwrap::<JanetString>()
-            .unwrap()
-            .graphemes()
-            .collect::<JanetTuple>()
-            .into(),
+    match args[0].unwrap() {
+        TaggedJanet::Buffer(buf) => buf.graphemes().collect::<JanetTuple>().into(),
+        TaggedJanet::String(s) => s.graphemes().collect::<JanetTuple>().into(),
         _ => jpanic!(
             "bad slot #0, expected string|buffer, got {}",
             args[0].kind()
@@ -158,17 +114,13 @@ pub fn graphemes(args: &mut [Janet]) -> Janet {
 pub fn lines(args: &mut [Janet]) -> Janet {
     check_fix_arity(args, 1);
 
-    match args[0].kind() {
-        JanetType::Buffer => args[0]
-            .unwrap::<JanetBuffer>()
-            .unwrap()
+    match args[0].unwrap() {
+        TaggedJanet::Buffer(buf) => buf
             .lines()
             .map(JanetString::from)
             .collect::<JanetTuple>()
             .into(),
-        JanetType::String => args[0]
-            .unwrap::<JanetString>()
-            .unwrap()
+        TaggedJanet::String(s) => s
             .lines()
             .map(JanetString::from)
             .collect::<JanetTuple>()
@@ -184,17 +136,13 @@ pub fn lines(args: &mut [Janet]) -> Janet {
 pub fn lines_with_terminator(args: &mut [Janet]) -> Janet {
     check_fix_arity(args, 1);
 
-    match args[0].kind() {
-        JanetType::Buffer => args[0]
-            .unwrap::<JanetBuffer>()
-            .unwrap()
+    match args[0].unwrap() {
+        TaggedJanet::Buffer(buf) => buf
             .lines_with_terminator()
             .map(JanetString::from)
             .collect::<JanetTuple>()
             .into(),
-        JanetType::String => args[0]
-            .unwrap::<JanetString>()
-            .unwrap()
+        TaggedJanet::String(s) => s
             .lines_with_terminator()
             .map(JanetString::from)
             .collect::<JanetTuple>()
@@ -210,19 +158,9 @@ pub fn lines_with_terminator(args: &mut [Janet]) -> Janet {
 pub fn sentences(args: &mut [Janet]) -> Janet {
     check_fix_arity(args, 1);
 
-    match args[0].kind() {
-        JanetType::Buffer => args[0]
-            .unwrap::<JanetBuffer>()
-            .unwrap()
-            .sentences()
-            .collect::<JanetTuple>()
-            .into(),
-        JanetType::String => args[0]
-            .unwrap::<JanetString>()
-            .unwrap()
-            .sentences()
-            .collect::<JanetTuple>()
-            .into(),
+    match args[0].unwrap() {
+        TaggedJanet::Buffer(buf) => buf.sentences().collect::<JanetTuple>().into(),
+        TaggedJanet::String(s) => s.sentences().collect::<JanetTuple>().into(),
         _ => jpanic!(
             "bad slot #0, expected string|buffer, got {}",
             args[0].kind()
@@ -234,21 +172,9 @@ pub fn sentences(args: &mut [Janet]) -> Janet {
 pub fn words(args: &mut [Janet]) -> Janet {
     check_fix_arity(args, 1);
 
-    match args[0].kind() {
-        JanetType::Buffer => args[0]
-            .unwrap::<JanetBuffer>()
-            .unwrap()
-            .words()
-            // .map(JanetString::from)
-            .collect::<JanetTuple>()
-            .into(),
-        JanetType::String => args[0]
-            .unwrap::<JanetString>()
-            .unwrap()
-            .words()
-            // .map(JanetString::from)
-            .collect::<JanetTuple>()
-            .into(),
+    match args[0].unwrap() {
+        TaggedJanet::Buffer(buf) => buf.words().collect::<JanetTuple>().into(),
+        TaggedJanet::String(s) => s.words().collect::<JanetTuple>().into(),
         _ => jpanic!(
             "bad slot #0, expected string|buffer, got {}",
             args[0].kind()
@@ -260,19 +186,9 @@ pub fn words(args: &mut [Janet]) -> Janet {
 pub fn words_with_breaks(args: &mut [Janet]) -> Janet {
     check_fix_arity(args, 1);
 
-    match args[0].kind() {
-        JanetType::Buffer => args[0]
-            .unwrap::<JanetBuffer>()
-            .unwrap()
-            .words_with_breaks()
-            .collect::<JanetTuple>()
-            .into(),
-        JanetType::String => args[0]
-            .unwrap::<JanetString>()
-            .unwrap()
-            .words_with_breaks()
-            .collect::<JanetTuple>()
-            .into(),
+    match args[0].unwrap() {
+        TaggedJanet::Buffer(buf) => buf.words_with_breaks().collect::<JanetTuple>().into(),
+        TaggedJanet::String(s) => s.words_with_breaks().collect::<JanetTuple>().into(),
         _ => jpanic!(
             "bad slot #0, expected string|buffer, got {}",
             args[0].kind()
@@ -284,13 +200,11 @@ pub fn words_with_breaks(args: &mut [Janet]) -> Janet {
 pub fn utf8_chunks(args: &mut [Janet]) -> Janet {
     check_fix_arity(args, 1);
 
-    match args[0].kind() {
-        JanetType::Buffer => {
-            let buff = args[0].unwrap::<JanetBuffer>().unwrap();
-
+    match args[0].unwrap() {
+        TaggedJanet::Buffer(buf) => {
             let (mut valid, mut invalid) = (Vec::with_capacity(10), Vec::with_capacity(10));
 
-            buff.utf8_chunks().for_each(|chunk| {
+            buf.utf8_chunks().for_each(|chunk| {
                 if !chunk.valid().is_empty() {
                     valid.push(chunk.valid());
                 }
@@ -308,10 +222,8 @@ pub fn utf8_chunks(args: &mut [Janet]) -> Janet {
                     .collect::<JanetTuple>()
             ]
             .into()
-        },
-        JanetType::String => {
-            let s = args[0].unwrap::<JanetString>().unwrap();
-
+        }
+        TaggedJanet::String(s) => {
             let (mut valid, mut invalid) = (Vec::with_capacity(10), Vec::with_capacity(10));
 
             s.utf8_chunks().for_each(|chunk| {
@@ -332,7 +244,7 @@ pub fn utf8_chunks(args: &mut [Janet]) -> Janet {
                     .collect::<JanetTuple>()
             ]
             .into()
-        },
+        }
         _ => jpanic!(
             "bad slot #0, expected string|buffer, got {}",
             args[0].kind()

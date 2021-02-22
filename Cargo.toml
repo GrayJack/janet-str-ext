@@ -1,6 +1,6 @@
 [package]
 name = "str-ext"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Author <email@provider.com>"]
 edition = "2018"
 
@@ -15,4 +15,4 @@ crate-type = ["cdylib", "staticlib"]
 bench = false
 
 [dependencies]
-janetrs = { version = "0.1.2", features = ["attr-macros"]}
+janetrs = "0.2.0"
