@@ -1,7 +1,6 @@
 use janetrs::{
-    janet_fn, janet_mod, jpanic, tuple,
-    types::{Janet, JanetString, JanetTuple, TaggedJanet},
-    util::check_fix_arity,
+    janet_fn, janet_mod, jpanic, tuple, util::check_fix_arity, Janet, JanetString, JanetTuple,
+    TaggedJanet,
 };
 
 #[janet_fn]

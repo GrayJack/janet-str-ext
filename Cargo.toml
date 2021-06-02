@@ -15,4 +15,4 @@ crate-type = ["cdylib", "staticlib"]
 bench = false
 
 [dependencies]
-janetrs = "0.2.0"
+janetrs = "0.3.1"
