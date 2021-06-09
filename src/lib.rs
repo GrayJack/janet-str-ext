@@ -256,7 +256,7 @@ janet_mod!("str-ext";
     {"ascii?", is_ascii, "(str-ext/ascii? str-or-buff)\n\nReturns true if and only if every byte in this string|buffer is ASCII."},
     {"utf8?", is_utf8, "(str-ext/utf8? str-or-buff)\n\nReturns true if and only if the entire string|buffer is valid UTF-8."},
     {"chars", chars, "(str-ext/chars str-or-buff)\n\nReturns a tuple with the chars of the string|buffer. If invalid UTF-8 is encountered, then the Unicode replacement codepoint is yielded instead."},
-    {"fields", fields, "(str-ext/chars str-or-buff)\n\nReturns a tuple with the fields of the string|buffer separated by contiguous whitespace."},
+    {"fields", fields, "(str-ext/fields str-or-buff)\n\nReturns a tuple with the fields of the string|buffer separated by contiguous whitespace."},
     {"graphemes", graphemes, "(str-ext/graphemes str-or-buff)\n\nReturns a tuple with the grapheme clusters of the string|buffer. If invalid UTF-8 is encountered, then the Unicode replacement codepoint is yielded instead."},
     {"lines", lines, "(str-ext/lines str-or-buff)\n\nReturns a tuple with the lines of the string|buffer without the terminator. This only recognizes `\\n` and `\\r\\n` as line terminator."},
     {"lines-with-terminator", lines_with_terminator, "(str-ext/lines-with-terminator str-or-buff)\n\nReturns a tuple with the lines of the string|buffer with the terminators. This only recognizes `\\n` and `\\r\\n` as line terminator."},
