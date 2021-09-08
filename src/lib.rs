@@ -1,6 +1,6 @@
 use janetrs::{
-    declare_janet_mod, janet_fn, jpanic, tuple, util::check_fix_arity, Janet, JanetString,
-    JanetTuple, TaggedJanet,
+    bad_slot, declare_janet_mod, janet_fn, jpanic, tuple, Janet, JanetArgs, JanetKeyword,
+    JanetString, JanetTuple, TaggedJanet,
 };
 
 /// (str-ext/contains? pattern str-or-buff)
@@ -13,23 +13,14 @@ pub fn contains(args: &mut [Janet]) -> Janet {
         TaggedJanet::Buffer(buf) => match args[0].unwrap() {
             TaggedJanet::Buffer(pattern) => buf.contains(pattern).into(),
             TaggedJanet::String(pattern) => buf.contains(pattern).into(),
-            _ => jpanic!(
-                "bad slot #0, expected string|buffer, got {}",
-                args[0].kind()
-            ),
+            _ => bad_slot!(args, 0, "string|buffer"),
         },
         TaggedJanet::String(s) => match args[0].unwrap() {
             TaggedJanet::Buffer(pattern) => s.contains(pattern).into(),
             TaggedJanet::String(pattern) => s.contains(pattern).into(),
-            _ => jpanic!(
-                "bad slot #0, expected string|buffer, got {}",
-                args[0].kind()
-            ),
+            _ => bad_slot!(args, 0, "string|buffer"),
         },
-        _ => jpanic!(
-            "bad slot #1, expected string|buffer, got {}",
-            args[1].kind()
-        ),
+        _ => bad_slot!(args, 1, "string|buffer"),
     }
 }
 
@@ -41,10 +32,7 @@ pub fn is_ascii(args: &mut [Janet]) -> Janet {
     match args[0].unwrap() {
         TaggedJanet::Buffer(buf) => buf.is_ascii().into(),
         TaggedJanet::String(s) => s.is_ascii().into(),
-        _ => jpanic!(
-            "bad slot #0, expected string|buffer, got {}",
-            args[0].kind()
-        ),
+        _ => bad_slot!(args, 0, "string|buffer"),
     }
 }
 
@@ -56,10 +44,7 @@ pub fn is_utf8(args: &mut [Janet]) -> Janet {
     match args[0].unwrap() {
         TaggedJanet::Buffer(buf) => buf.is_utf8().into(),
         TaggedJanet::String(s) => s.is_utf8().into(),
-        _ => jpanic!(
-            "bad slot #0, expected string|buffer, got {}",
-            args[0].kind()
-        ),
+        _ => bad_slot!(args, 0, "string|buffer"),
     }
 }
 
@@ -72,10 +57,7 @@ pub fn chars(args: &mut [Janet]) -> Janet {
     match args[0].unwrap() {
         TaggedJanet::Buffer(buf) => buf.chars().collect::<JanetTuple>().into(),
         TaggedJanet::String(s) => s.chars().collect::<JanetTuple>().into(),
-        _ => jpanic!(
-            "bad slot #0, expected string|buffer, got {}",
-            args[0].kind()
-        ),
+        _ => bad_slot!(args, 0, "string|buffer"),
     }
 }
 
@@ -96,10 +78,7 @@ pub fn fields(args: &mut [Janet]) -> Janet {
             .map(JanetString::from)
             .collect::<JanetTuple>()
             .into(),
-        _ => jpanic!(
-            "bad slot #0, expected string|buffer, got {}",
-            args[0].kind()
-        ),
+        _ => bad_slot!(args, 0, "string|buffer"),
     }
 }
 
@@ -112,57 +91,53 @@ pub fn graphemes(args: &mut [Janet]) -> Janet {
     match args[0].unwrap() {
         TaggedJanet::Buffer(buf) => buf.graphemes().collect::<JanetTuple>().into(),
         TaggedJanet::String(s) => s.graphemes().collect::<JanetTuple>().into(),
-        _ => jpanic!(
-            "bad slot #0, expected string|buffer, got {}",
-            args[0].kind()
-        ),
+        _ => bad_slot!(args, 0, "string|buffer"),
     }
 }
 
-/// (str-ext/lines str-or-buff)
+/// (str-ext/lines str-or-buff &opt mode)
 ///
-/// Returns a tuple with the lines of the `string|buffer` without the terminator. This
-/// only recognizes `\\n` and `\\r\\n` as line terminator.
-#[janet_fn(arity(fix(1)))]
+/// Returns a tuple with the lines of the `string|buffer` without the terminator if the
+/// mode is `:no-terminator` or if no mode is passed.
+///
+/// Returns a tuple with the lines of the `string|buffer` with the terminators if the mode
+/// is `:with-terminator` or `:terminator`.
+///
+/// This only recognizes `\\n` and `\\r\\n` as line terminator.
+#[janet_fn(arity(range(1, 2)))]
 pub fn lines(args: &mut [Janet]) -> Janet {
-    match args[0].unwrap() {
-        TaggedJanet::Buffer(buf) => buf
-            .lines()
-            .map(JanetString::from)
-            .collect::<JanetTuple>()
-            .into(),
-        TaggedJanet::String(s) => s
-            .lines()
-            .map(JanetString::from)
-            .collect::<JanetTuple>()
-            .into(),
-        _ => jpanic!(
-            "bad slot #0, expected string|buffer, got {}",
-            args[0].kind()
-        ),
-    }
-}
+    let mode = args.get_opt(1, JanetKeyword::new("no-terminator"));
 
-/// (str-ext/lines-with-terminator str-or-buff)
-///
-/// Returns a tuple with the lines of the `string|buffer` with the terminators. This only
-/// recognizes `\\n` and `\\r\\n` as line terminator.
-#[janet_fn(arity(fix(1)))]
-pub fn lines_with_terminator(args: &mut [Janet]) -> Janet {
-    match args[0].unwrap() {
-        TaggedJanet::Buffer(buf) => buf
-            .lines_with_terminator()
-            .map(JanetString::from)
-            .collect::<JanetTuple>()
-            .into(),
-        TaggedJanet::String(s) => s
-            .lines_with_terminator()
-            .map(JanetString::from)
-            .collect::<JanetTuple>()
-            .into(),
+    match mode.as_bytes() {
+        b"no-terminator" => match args[0].unwrap() {
+            TaggedJanet::Buffer(buf) => buf
+                .lines()
+                .map(JanetString::from)
+                .collect::<JanetTuple>()
+                .into(),
+            TaggedJanet::String(s) => s
+                .lines()
+                .map(JanetString::from)
+                .collect::<JanetTuple>()
+                .into(),
+            _ => bad_slot!(args, 0, "string|buffer"),
+        },
+        b"with-terminator" | b"terminator" => match args[0].unwrap() {
+            TaggedJanet::Buffer(buf) => buf
+                .lines_with_terminator()
+                .map(JanetString::from)
+                .collect::<JanetTuple>()
+                .into(),
+            TaggedJanet::String(s) => s
+                .lines_with_terminator()
+                .map(JanetString::from)
+                .collect::<JanetTuple>()
+                .into(),
+            _ => bad_slot!(args, 0, "string|buffer"),
+        },
         _ => jpanic!(
-            "bad slot #0, expected string|buffer, got {}",
-            args[0].kind()
+            "invalid mode. These are the possible values: `:no-terminator`, `:with-terminator` \
+             and `:terminator`"
         ),
     }
 }
@@ -178,41 +153,40 @@ pub fn sentences(args: &mut [Janet]) -> Janet {
     match args[0].unwrap() {
         TaggedJanet::Buffer(buf) => buf.sentences().collect::<JanetTuple>().into(),
         TaggedJanet::String(s) => s.sentences().collect::<JanetTuple>().into(),
-        _ => jpanic!(
-            "bad slot #0, expected string|buffer, got {}",
-            args[0].kind()
-        ),
+        _ => bad_slot!(args, 0, "string|buffer"),
     }
 }
 
-/// (str-ext/words str-or-buff)
+/// (str-ext/words str-or-buff &opt mode)
 ///
-/// Returns a tuple with the words of the `string|buffer`. If invalid UTF-8 is
-/// encountered, then the Unicode replacement codepoint is yielded instead.
-#[janet_fn(arity(fix(1)))]
+/// Returns a tuple with the words of the `string|buffer` if the mode is `:no-breaks` or
+/// if no mode is passed.
+///
+/// Returns a tuple with the words and breaks of the `string|buffer` if the mode is
+/// `:with-breaks` or `:breaks`.
+///
+/// If invalid UTF-8 is encountered, then the Unicode replacement codepoint is yielded
+/// instead.
+///
+/// Valid modes: `:no-breaks`, `:with-breaks`, `:breaks`
+#[janet_fn(arity(range(1, 2)))]
 pub fn words(args: &mut [Janet]) -> Janet {
-    match args[0].unwrap() {
-        TaggedJanet::Buffer(buf) => buf.words().collect::<JanetTuple>().into(),
-        TaggedJanet::String(s) => s.words().collect::<JanetTuple>().into(),
-        _ => jpanic!(
-            "bad slot #0, expected string|buffer, got {}",
-            args[0].kind()
-        ),
-    }
-}
+    let mode = args.get_opt(1, JanetKeyword::new("no-breaks"));
 
-/// (str-ext/words-with-breaks str-or-buff)
-///
-/// Returns a tuple with the words and breaks of the `string|buffer`. If invalid UTF-8 is
-/// encountered, then the Unicode replacement codepoint is yielded instead.
-#[janet_fn(arity(fix(1)))]
-pub fn words_with_breaks(args: &mut [Janet]) -> Janet {
-    match args[0].unwrap() {
-        TaggedJanet::Buffer(buf) => buf.words_with_breaks().collect::<JanetTuple>().into(),
-        TaggedJanet::String(s) => s.words_with_breaks().collect::<JanetTuple>().into(),
+    match mode.as_bytes() {
+        b"no-breaks" => match args[0].unwrap() {
+            TaggedJanet::Buffer(buf) => buf.words().collect::<JanetTuple>().into(),
+            TaggedJanet::String(s) => s.words().collect::<JanetTuple>().into(),
+            _ => bad_slot!(args, 0, "string|buffer"),
+        },
+        b"with-breaks" | b"breaks" => match args[0].unwrap() {
+            TaggedJanet::Buffer(buf) => buf.words_with_breaks().collect::<JanetTuple>().into(),
+            TaggedJanet::String(s) => s.words_with_breaks().collect::<JanetTuple>().into(),
+            _ => bad_slot!(args, 0, "string|buffer"),
+        },
         _ => jpanic!(
-            "bad slot #0, expected string|buffer, got {}",
-            args[0].kind()
+            "invalid mode. These are the possible values: `:no-breaks`, `:with-breaks` and \
+             `:breaks`"
         ),
     }
 }
@@ -271,10 +245,7 @@ pub fn utf8_chunks(args: &mut [Janet]) -> Janet {
             ]
             .into()
         },
-        _ => jpanic!(
-            "bad slot #0, expected string|buffer, got {}",
-            args[0].kind()
-        ),
+        _ => bad_slot!(args, 0, "string|buffer"),
     }
 }
 
@@ -286,9 +257,7 @@ declare_janet_mod!("str-ext";
     {"fields", fields},
     {"graphemes", graphemes},
     {"lines", lines},
-    {"lines-with-terminator", lines_with_terminator},
     {"sentences", sentences},
     {"words", words},
-    {"words-with-breaks", words_with_breaks},
     {"utf8-chunks", utf8_chunks}
 );
