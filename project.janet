@@ -1,5 +1,10 @@
 (declare-project
-  :name "str-ext")
+  :name "str-ext"
+  :description "Janet library with functions to extend the available API for string and buffers in the langauge"
+  :author "GrayJack"
+  :license "MIT"
+  :url "https://github.com/GrayJack/janet-str-ext"
+  :repo "git+https://github.com/GrayJack/janet-str-ext.git")
 
 (post-deps
   (declare-native
