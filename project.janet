@@ -3,7 +3,7 @@
   :description "Janet library with functions to extend the available API for string and buffers in the langauge"
   :author "GrayJack"
   :license "MIT or Apache 2.0"
-  :url "https://github.com/GrayJack/janet-str-ext"
+  :url "https://grayjack.github.io/janet-str-ext/"
   :repo "git+https://github.com/GrayJack/janet-str-ext.git")
 
 (post-deps
