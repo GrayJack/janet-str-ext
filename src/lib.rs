@@ -249,6 +249,26 @@ pub fn utf8_chunks(args: &mut [Janet]) -> Janet {
     }
 }
 
+/// (str-ext/split-whitespace str-or-buff)
+///
+/// Returns a tuple with the slices of the string splited on whitespace.
+#[janet_fn(arity(fix(1)))]
+pub fn split_whitespace(args: &mut [Janet]) -> Janet {
+    match args[0].unwrap() {
+        TaggedJanet::Buffer(buf) => buf
+            .to_str_lossy()
+            .split_whitespace()
+            .collect::<JanetTuple>()
+            .into(),
+        TaggedJanet::String(s) => s
+            .to_str_lossy()
+            .split_whitespace()
+            .collect::<JanetTuple>()
+            .into(),
+        _ => bad_slot!(args, 0, "string|buffer"),
+    }
+}
+
 declare_janet_mod!("str-ext";
     {"contains?", contains},
     {"ascii?", is_ascii},
@@ -259,5 +279,6 @@ declare_janet_mod!("str-ext";
     {"lines", lines},
     {"sentences", sentences},
     {"words", words},
-    {"utf8-chunks", utf8_chunks}
+    {"utf8-chunks", utf8_chunks},
+    {"split-whitespace", split_whitespace}
 );

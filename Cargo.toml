@@ -1,6 +1,6 @@
 [package]
 name = "str-ext"
-version = "0.3.0"
+version = "0.4.0"
 authors = ["GrayJack <gr41.j4ck@gmail.com>"]
 edition = "2018"
 
@@ -15,7 +15,7 @@ crate-type = ["cdylib", "staticlib"]
 bench = false
 
 [dependencies]
-janetrs = "0.4.1"
+janetrs = "0.7.0"
 
 [features]
 default = ["system-janet"]
