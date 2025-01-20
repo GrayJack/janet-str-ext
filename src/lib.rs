@@ -1,6 +1,6 @@
 use janetrs::{
-    bad_slot, declare_janet_mod, janet_fn, jpanic, tuple, Janet, JanetArgs, JanetKeyword,
-    JanetString, JanetTuple, TaggedJanet,
+    Janet, JanetArgs, JanetKeyword, JanetString, JanetTuple, TaggedJanet, bad_slot,
+    declare_janet_mod, janet_fn, jpanic, tuple,
 };
 
 /// (str-ext/contains? pattern str-or-buff)
