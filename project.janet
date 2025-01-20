@@ -8,7 +8,7 @@
 
 (post-deps
   (declare-native
-    :name "template"
+    :name "str_ext"
     :source [])
 
   (phony "build-release" []
